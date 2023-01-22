@@ -3,6 +3,7 @@
 #include <types.h>
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glad/glad.h>
 
 Application::Application(std::string WindowTitle, int width, int height) : _applicationName{ WindowTitle }, _width{ width }, _height{ height } {}
 
@@ -77,12 +78,23 @@ bool Application::openWindow() {
 
 
 void Application::setupScene() {
-    _meshes.emplace_back(Shapes::pyramidVertices, Shapes::pyramidElements);
+    // creating different meshes for each shape and manipulating the position
+    auto& bridgePillar1 = _meshes.emplace_back(Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
+    bridgePillar1.Transform = glm::translate(bridgePillar1.Transform, glm::vec3(1.f, -0.5f, 0.0f));
+
+    auto& bridgePillar2 = _meshes.emplace_back(Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
+    bridgePillar2.Transform = glm::translate(bridgePillar2.Transform, glm::vec3(-1.f, -0.5f, 0.0f));
+
+    auto& bridgeTop = _meshes.emplace_back(Shapes::bridgeTopVertices, Shapes::bridgeTopElements);
+    bridgeTop.Transform = glm::translate(bridgeTop.Transform, glm::vec3(0.0f, 0.90f, 0.0f));
+    bridgeTop.Transform = glm::rotate(bridgeTop.Transform, glm::radians(90.f), glm::vec3(0, 1, 0));
+
+    auto& bridgeBody = _meshes.emplace_back(Shapes::bridgeBodyVertices, Shapes::cubeElements);
+    bridgeBody.Transform = glm::translate(bridgeBody.Transform, glm::vec3(0.0f, 0.25f, 0.0f));
 
     // declaring paths to shaderfiles
     Path shaderPath = std::filesystem::current_path() / "shaders";
     _shader = Shader( shaderPath / "basic_shader.vert" , shaderPath / "basic_shader.frag");
-
 }
 
 bool Application::update() {
@@ -95,18 +107,19 @@ bool Application::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // set model view projection matrix
-    glm::mat4 view = glm::lookAt(glm::vec3(1.f, 0.5f, -2.f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    glm::mat4 projection = glm::perspective(glm::radians(75.f), (float)_width / (float)_height, 0.1f, 100.f);
+    glm::mat4 view = glm::lookAt(glm::vec3(-2.f, 0.f, 5.f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    glm::mat4 projection = glm::perspective(glm::radians(90.f), (float)_width / (float)_height, 0.1f, 100.f);
     glm::mat4 model = glm::mat4 { 1.f };
 
     // set matrices in the shader
     _shader.Bind();
     _shader.SetMat4("projection", projection);
     _shader.SetMat4("view", view);
-    _shader.SetMat4("model", model);
 
     // draw each mesh
     for (auto& mesh : _meshes) {
+        // sending each individual mesh.Transform to the shader
+        _shader.SetMat4("model", mesh.Transform);
         mesh.Draw();
     }
 

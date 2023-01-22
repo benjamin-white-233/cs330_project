@@ -33,7 +33,6 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& elements) {
 
 void Mesh::Draw() {
 
-
     // Bind vertex array
     glBindVertexArray(_vertexArrayObject);
 

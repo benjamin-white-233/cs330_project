@@ -31,7 +31,6 @@ Shader::Shader(const Path& vertexPath, const Path& fragmentPath) {
     } catch (std::ifstream::failure& e) {
         std::cout << "Error: Unable to read shader files." << std::endl;
     }
-
 }
 
 void Shader::Bind() {
