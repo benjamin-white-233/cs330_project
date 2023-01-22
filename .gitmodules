@@ -1,0 +1,6 @@
+[submodule "CS330_App/external/glfw"]
+	path = CS330_App/external/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "CS330_App/external/glm"]
+	path = CS330_App/external/glm
+	url = git@github.com:g-truc/glm.git
