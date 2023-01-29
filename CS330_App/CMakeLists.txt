@@ -8,7 +8,7 @@ find_package(OpenGL REQUIRED)
 file(GLOB_RECURSE SOURCES src/*.cpp)
 file(GLOB_RECURSE GLAD_SOURCES external/GLAD/glad/*.c)
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${GLAD_SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${GLAD_SOURCES} src/camera.cpp)
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE

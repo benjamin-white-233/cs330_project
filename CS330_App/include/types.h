@@ -11,6 +11,29 @@ struct Vertex {
 
 
 struct Shapes {
+    static inline std::vector<Vertex> planeVertices {
+            // 0
+            {
+                    .Position = {-5.f, 0.f, -4.f},
+                    .Color = {0.2f, 0.6f, 0.1f}
+            },
+            // 1
+            {
+                    .Position = {5.f, 0.f, -4.f},
+                    .Color = {0.2f, 0.6f, 0.1f}
+            },
+            // 2
+            {
+                    .Position = {5.f, 0.f, 4.f},
+                    .Color = {0.2f, 0.7f, 0.9f}
+            },
+            // 3
+            {
+                    .Position = {-5.f, 0.f, 4.f},
+                    .Color = {0.2f, 0.7f, 0.9f}
+            },
+    };
+
     static inline std::vector<Vertex> cubeVertices {
     // front
         // 0
@@ -151,12 +174,12 @@ struct Shapes {
             },
             // 1
             {
-                    .Position = {-0.25f, -0.75f, 0.5f},
+                    .Position = {-0.25f, -0.5f, 0.5f},
                     .Color = {0.5f, 1.f, 0.5f}
             },
             // 2
             {
-                    .Position = {0.25f, -0.75f, 0.5f},
+                    .Position = {0.25f, -0.5f, 0.5f},
                     .Color = {0.5f, 0.5f, 1.f}
 
             },
@@ -173,12 +196,12 @@ struct Shapes {
             },
             // 5
             {
-                    .Position = {0.25f, -0.75f, 0.5f},
+                    .Position = {0.25f, -0.5f, 0.5f},
                     .Color = {0.5f, 0.5f, 1.f}
             },
             // 6
             {
-                    .Position = {0.25f, -0.75f, -0.5f},
+                    .Position = {0.25f, -0.5f, -0.5f},
                     .Color = {1.f, 0.5f, 0.5f}
             },
             // 7
@@ -194,12 +217,12 @@ struct Shapes {
             },
             // 9
             {
-                    .Position = {0.25f, -0.75f, -0.5f},
+                    .Position = {0.25f, -0.5f, -0.5f},
                     .Color = {1.f, 0.5f, 0.5f}
             },
             // 10
             {
-                    .Position = {-0.25f, -0.75f, -0.5f},
+                    .Position = {-0.25f, -0.5f, -0.5f},
                     .Color = {0.5f, 0.5f, 1.f}
             },
             // 11
@@ -215,12 +238,12 @@ struct Shapes {
             },
             // 13
             {
-                    .Position = {-0.25f, -0.75f, -0.5f},
+                    .Position = {-0.25f, -0.5f, -0.5f},
                     .Color = {0.5f, 0.5f, 1.f}
             },
             // 14
             {
-                    .Position = {-0.25f, -0.75f, 0.5f},
+                    .Position = {-0.25f, -0.5f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f}
             },
             // 15
@@ -252,23 +275,23 @@ struct Shapes {
             // bottom
             // 20
             {
-                    .Position = {0.25f, -0.75f, 0.5f},
+                    .Position = {0.25f, -0.5f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f}
             },
             // 21
             {
-                    .Position = {0.25f, -0.75f, -0.5f},
+                    .Position = {0.25f, -0.5f, -0.5f},
                     .Color = {0.5f, 1.f, 0.5f}
 
             },
             // 22
             {
-                    .Position = {-0.25f, -0.75f, -0.5f},
+                    .Position = {-0.25f, -0.5f, -0.5f},
                     .Color = {0.5f, 0.5f, 1.f}
             },
             // 23
             {
-                    .Position = {-0.25f, -0.75f, 0.5f},
+                    .Position = {-0.25f, -0.5f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f}
             },
     };
@@ -481,5 +504,10 @@ struct Shapes {
             12, 13, 15, 13, 14, 15, // left
             16, 17, 19, 17, 18, 19, // top
             20, 21, 23, 21, 22, 23 // bottom
+    };
+
+    static inline std::vector<uint32_t> planeElements {
+            0, 1, 2,
+            2, 3, 0
     };
 };

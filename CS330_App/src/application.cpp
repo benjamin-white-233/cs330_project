@@ -5,7 +5,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
 
-Application::Application(std::string WindowTitle, int width, int height) : _applicationName{ WindowTitle }, _width{ width }, _height{ height } {}
+Application::Application(std::string WindowTitle, int width, int height)
+        : _applicationName{ WindowTitle }, _width{ width }, _height{ height },
+          _camera {width, height, {-2.f, 0.f, 5.f}, true },
+          _cameraLookSpeed {0.1f, 0.1f}
+{}
 
 void Application::Run() {
     // Open the window
@@ -13,6 +17,7 @@ void Application::Run() {
         return;
     }
 
+    setupInputs();
     _running = true;
 
     // Set up the scene
@@ -20,12 +25,21 @@ void Application::Run() {
 
     // Run application
     while (_running) {
+        float currentTime = glfwGetTime();
+
+        if (_lastFrameTime == -1.f) {
+            _lastFrameTime = currentTime;
+        }
+
+        auto deltaTime = currentTime - _lastFrameTime;
+        _lastFrameTime = currentTime;
+
         if (glfwWindowShouldClose(_window)) {
             _running = false;
-            break;
+            continue;
         }
         // Update
-        update();
+        update(deltaTime);
         // Draw
         draw();
     }
@@ -61,6 +75,8 @@ bool Application::openWindow() {
         auto app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
         app->_width = width;
         app->_height = height;
+
+        app->_camera.SetSize(width, height);
     });
 
     // if GLAD cannot be loaded, return false
@@ -77,8 +93,83 @@ bool Application::openWindow() {
 }
 
 
+void Application::setupInputs() {
+    glfwSetKeyCallback(_window, [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+        auto* app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
+
+        // establishing key press actions
+        switch (key) {
+            case GLFW_KEY_ESCAPE: {
+                if (action == GLFW_PRESS) {
+                    app->_running = false;
+                }
+                break;
+            }
+                // switch to ortho camera
+            case GLFW_KEY_P: {
+                if (action == GLFW_PRESS) {
+                    app->_camera.SetIsPerspective(!app->_camera.IsPerspective());
+                }
+            }
+            default: {}
+        }
+    });
+
+    glfwSetCursorPosCallback(_window, [](GLFWwindow* window, double xpos, double ypos) {
+        auto* app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
+
+        app->mousePositionCallback(xpos, ypos);
+    });
+
+    glfwSetScrollCallback(_window, [](GLFWwindow* window, double xOffset, double yOffset) {
+        auto* app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
+
+        app->IncrementSpeed(yOffset);
+
+        std::cout << "Mouse wheel (" << xOffset << ", " << yOffset << ")" << std::endl;
+    });
+
+    glfwSetMouseButtonCallback(_window, [](GLFWwindow* window, int button, int action, int mods) {
+        switch (button) {
+            case GLFW_MOUSE_BUTTON_LEFT: {
+                if (action == GLFW_PRESS) {
+                    std::cout << "Mouse button left pressed" << std::endl;
+                }
+                else {
+
+                }
+                break;
+            }
+            case GLFW_MOUSE_BUTTON_MIDDLE: {
+                if (action == GLFW_PRESS) {
+                    std::cout << "Mouse button middle pressed" << std::endl;
+                }
+                else {
+
+                }
+                break;
+            }
+            case GLFW_MOUSE_BUTTON_RIGHT: {
+                if (action == GLFW_PRESS) {
+                    std::cout << "Mouse button right pressed" << std::endl;
+                }
+                else {
+
+                }
+                break;
+            }
+            default:
+                std::cout << "Unhangled mouse button event" << std::endl;
+
+        }
+    });
+}
+
 void Application::setupScene() {
     // creating different meshes for each shape and manipulating the position
+    auto& plane = _meshes.emplace_back(Shapes::planeVertices, Shapes::planeElements);
+    plane.Transform = glm::translate(plane.Transform, glm::vec3(0.f, -1.f, 0.f));
+
     auto& bridgePillar1 = _meshes.emplace_back(Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
     bridgePillar1.Transform = glm::translate(bridgePillar1.Transform, glm::vec3(1.f, -0.5f, 0.0f));
 
@@ -97,7 +188,12 @@ void Application::setupScene() {
     _shader = Shader( shaderPath / "basic_shader.vert" , shaderPath / "basic_shader.frag");
 }
 
-bool Application::update() {
+
+bool Application::update(float deltaTime) {
+    glfwPollEvents();
+
+    handleInput(deltaTime);
+
     return false;
 }
 
@@ -106,10 +202,10 @@ bool Application::draw() {
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // camera
     // set model view projection matrix
-    glm::mat4 view = glm::lookAt(glm::vec3(-2.f, 0.f, 5.f), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    glm::mat4 projection = glm::perspective(glm::radians(90.f), (float)_width / (float)_height, 0.1f, 100.f);
-    glm::mat4 model = glm::mat4 { 1.f };
+    glm::mat4 view = _camera.GetViewMatrix();
+    glm::mat4 projection = _camera.GetProjectionMatrix();
 
     // set matrices in the shader
     _shader.Bind();
@@ -124,8 +220,58 @@ bool Application::draw() {
     }
 
     glfwSwapBuffers(_window);
-    glfwPollEvents();
-
     return false;
 }
 
+// assigning keys to a movement direction
+void Application::handleInput(float deltaTime) {
+
+    auto moveAmount = abs(_moveSpeed * deltaTime);
+
+    if (glfwGetKey(_window, GLFW_KEY_W)) {
+        _camera.MoveCamera(Camera::MoveDirection::Forward, moveAmount);
+    }
+    if (glfwGetKey(_window, GLFW_KEY_A)) {
+        _camera.MoveCamera(Camera::MoveDirection::Left, moveAmount);
+    }
+    if (glfwGetKey(_window, GLFW_KEY_S)) {
+        _camera.MoveCamera(Camera::MoveDirection::Backward, moveAmount);
+    }
+    if (glfwGetKey(_window, GLFW_KEY_D)) {
+        _camera.MoveCamera(Camera::MoveDirection::Right, moveAmount);
+    }
+    if (glfwGetKey(_window, GLFW_KEY_Q)) {
+        _camera.MoveCamera(Camera::MoveDirection::Up, moveAmount);
+    }
+    if (glfwGetKey(_window, GLFW_KEY_E)) {
+        _camera.MoveCamera(Camera::MoveDirection::Down, moveAmount);
+    }
+
+    double xpos, ypos;
+    glfwGetCursorPos(_window, &xpos, &ypos);
+
+    mousePositionCallback(xpos, ypos);
+}
+
+void Application::mousePositionCallback(double xpos, double ypos) {
+    if (!_firstMouse) {
+        _lastMousePosition.x = static_cast<float>(xpos);
+        _lastMousePosition.y = static_cast<float>(ypos);
+        _firstMouse = true;
+    }
+
+    glm::vec2 moveAmount {
+            xpos - _lastMousePosition.x,
+            _lastMousePosition.y - ypos,
+    };
+
+    _lastMousePosition.x = xpos;
+    _lastMousePosition.y = ypos;
+
+    _camera.RotateBy(moveAmount.x * _cameraLookSpeed.x, moveAmount.y * _cameraLookSpeed.y);
+}
+
+// incrementing camera movement speed
+void Application::IncrementSpeed(double amount) {
+    _moveSpeed += amount;
+}
