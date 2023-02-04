@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <shader.h>
 #include <camera.h>
+#include <texture.h>
 
 #include <mesh.h>
 
@@ -35,6 +36,7 @@ private:
     float _moveSpeed { 5.f };
     Camera _camera;
     std::vector<Mesh> _meshes;
+    std::vector<Texture> _textures;
     Shader _shader;
     bool _running { false };
 
@@ -43,4 +45,7 @@ private:
     glm::vec2 _cameraLookSpeed {};
 
     float _lastFrameTime { -1.f };
+
+    GLuint _containerTexture;
+    GLuint _mossTexture;
 };

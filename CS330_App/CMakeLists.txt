@@ -9,7 +9,7 @@ find_package(OpenGL REQUIRED)
 file(GLOB_RECURSE SOURCES src/*.cpp)
 file(GLOB_RECURSE GLAD_SOURCES external/GLAD/glad/*.c)
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${GLAD_SOURCES} src/camera.cpp include/camera.h)
+add_executable(${PROJECT_NAME} ${SOURCES} ${GLAD_SOURCES} src/camera.cpp include/camera.h src/texture.cpp include/texture.h)
 
 target_include_directories(${PROJECT_NAME}
         PRIVATE
@@ -21,12 +21,12 @@ target_include_directories(${PROJECT_NAME}
         )
 
 target_link_libraries(${PROJECT_NAME}
-        PRIVATE
+    PRIVATE
         glfw
         glm
         OpenGL::GL
         stb
-        )
+)
 
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory

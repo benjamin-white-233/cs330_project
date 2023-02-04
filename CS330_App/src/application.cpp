@@ -4,6 +4,7 @@
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
+#include <stb_image.h>
 
 Application::Application(std::string WindowTitle, int width, int height)
         : _applicationName{ WindowTitle }, _width{ width }, _height{ height },
@@ -183,8 +184,13 @@ void Application::setupScene() {
     auto& bridgeBody = _meshes.emplace_back(Shapes::bridgeBodyVertices, Shapes::cubeElements);
     bridgeBody.Transform = glm::translate(bridgeBody.Transform, glm::vec3(0.0f, 0.25f, 0.0f));
 
+    // adding textures to vector
+    auto texturePath = std::filesystem::current_path() / "assets" / "textures";
+    _textures.emplace_back(texturePath / "container.jpg");
+    _textures.emplace_back(texturePath / "moss.jpg");
+
     // declaring paths to shaderfiles
-    Path shaderPath = std::filesystem::current_path() / "shaders";
+    Path shaderPath = std::filesystem::current_path() / "assets" / "shaders";
     _shader = Shader( shaderPath / "basic_shader.vert" , shaderPath / "basic_shader.frag");
 }
 
@@ -211,6 +217,14 @@ bool Application::draw() {
     _shader.Bind();
     _shader.SetMat4("projection", projection);
     _shader.SetMat4("view", view);
+
+    _shader.SetInt("tex0", 0);
+    _shader.SetInt("tex1", 1);
+
+    for (auto i = 0; i < _textures.size(); i++) {
+        glActiveTexture(GL_TEXTURE0 + i);
+        _textures[i].Bind();
+    }
 
     // draw each mesh
     for (auto& mesh : _meshes) {
