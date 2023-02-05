@@ -14,27 +14,27 @@ struct Shapes {
     static inline std::vector<Vertex> planeVertices {
             // 0
             {
-                    .Position = {-5.f, 0.f, -4.f},
+                    .Position = {-2.5f, 0.f, 4.f},
                     .Color = {0.2f, 0.6f, 0.1f},
                     .Uv = {0.f, 0.f}
             },
             // 1
             {
-                    .Position = {5.f, 0.f, -4.f},
+                    .Position = {2.5f, 0.f, 4.f},
                     .Color = {0.2f, 0.6f, 0.1f},
                     .Uv = {0.f, 1.f}
             },
             // 2
             {
-                    .Position = {5.f, 0.f, 4.f},
+                    .Position = {2.5f, 0.f, -4.f},
                     .Color = {0.2f, 0.7f, 0.9f},
                     .Uv = {1.f, 1.f}
             },
             // 3
             {
-                    .Position = {-5.f, 0.f, 4.f},
+                    .Position = {-2.5f, 0.f, -4.f},
                     .Color = {0.2f, 0.7f, 0.9f},
-                    .Uv = {0.f, 1.f}
+                    .Uv = {1.f, 0.f}
             },
     };
 
@@ -343,44 +343,110 @@ struct Shapes {
             // front
             // 0
             {
-                    .Position = {-1.f, -0.5f, -1.25f},
+                    .Position = {-1.f, -0.5f, 1.25f},
                     .Color = {1.f, 0.5f, 0.5f},
                     .Uv = {0.f, 0.f}
             },
             // 1
+            {
+                    .Position = {1.f, -0.5f, 1.25f},
+                    .Color = {0.5f, 1.f, 0.5f},
+                    .Uv = {0.f, 0.f}
+            },
+            // top point
+            // 2
+            {
+                    .Position = {0.0f, 0.1f, 1.25f},
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Uv = {0.f, 1.f}
+            },
+            //// second triangle
+            // front
+            // 3
+            {
+                    .Position = {-1.f, -0.5f, -1.25f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {1.f, 0.f}
+            },
+            // 4
             {
                     .Position = {1.f, -0.5f, -1.25f},
                     .Color = {0.5f, 1.f, 0.5f},
                     .Uv = {1.f, 0.f}
             },
             // top point
-            // 2
+            // 5
             {
                     .Position = {0.0f, 0.1f, -1.25f},
                     .Color = {0.5f, 0.5f, 1.f},
-                    .Uv = {0.5f, 1.f}
+                    .Uv = {1.f, 1.f}
             },
-            //// second triangle
-            // front
-            // 3
+            // triangle 1 texture
+            // 6
             {
-                    .Position = {1.f, -0.5f, 1.25f},
+                    .Position = {-1.f, -0.5f, -1.251f},
                     .Color = {1.f, 0.5f, 0.5f},
                     .Uv = {0.f, 0.f}
             },
-            // 4
+            // 7
             {
-                    .Position = {-1.f, -0.5f, 1.25f},
-                    .Color = {0.5f, 1.f, 0.5f},
+                    .Position = {1.0f, -0.5f, -1.251f},
+                    .Color = {0.5f, 0.5f, 1.f},
                     .Uv = {1.f, 0.f}
             },
-            // top point
-            // 5
+            // front
+            // 8
             {
-                    .Position = {0.0f, 0.1f, 1.25f},
-                    .Color = {0.5f, 0.5f, 1.f},
+                    .Position = {0.f, 0.1f, -1.25f},
+                    .Color = {1.f, 0.5f, 0.5f},
                     .Uv = {0.5f, 1.f}
-            }
+            },
+            // triangle 2 texture
+            // 9
+            {
+                    .Position = {-1.f, -0.5f, 1.251f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 10
+            {
+                    .Position = {1.0f, -0.5f, 1.251f},
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Uv = {1.f, 0.f}
+            },
+            // front
+            // 11
+            {
+                    .Position = {0.f, 0.1f, 1.25f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {0.5f, 1.f}
+            },
+            // base texture
+            // 12
+            {
+                    .Position = {-1.f, -0.51f, -1.251f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 13
+            {
+                    .Position = {-1.f, -0.51f, 1.251f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {0.f, 1.f}
+            },
+            // 14
+            {
+                    .Position = {1.0f, -0.51f, -1.251f},
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Uv = {1.f, 0.f}
+            },
+            // 15
+            {
+                    .Position = {1.0f, -0.51f, 1.251f},
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Uv = {1.f, 1.f}
+            },
+
     };
 
     static inline std::vector<uint32_t> bridgeTopElements {
@@ -389,13 +455,19 @@ struct Shapes {
             // second triangle
             3, 4, 5,
             // sides
+            1, 4, 5,
             1, 5, 2,
-            2, 0, 4,
-            2, 4, 5,
-            1, 3, 5,
+            0, 5, 2,
+            0, 3, 5,
             // base
-            0, 4, 3,
-            1, 3, 0
+            1, 4, 3,
+            0, 1, 3,
+            // triangle texture
+            6, 7, 8,
+            9, 10, 11,
+            // base texture
+            12, 13, 14,
+            13, 14, 15
     };
 
 

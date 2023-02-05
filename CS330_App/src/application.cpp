@@ -168,26 +168,28 @@ void Application::setupInputs() {
 
 void Application::setupScene() {
     // creating different meshes for each shape and manipulating the position
-    auto& plane = _meshes.emplace_back(Shapes::planeVertices, Shapes::planeElements);
+    auto& plane = _meshes.emplace_back("plane", Shapes::planeVertices, Shapes::planeElements);
     plane.Transform = glm::translate(plane.Transform, glm::vec3(0.f, -1.f, 0.f));
 
-    auto& bridgePillar1 = _meshes.emplace_back(Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
+    auto& bridgePillar1 = _meshes.emplace_back("bridgePillar1", Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
     bridgePillar1.Transform = glm::translate(bridgePillar1.Transform, glm::vec3(1.f, -0.5f, 0.0f));
 
-    auto& bridgePillar2 = _meshes.emplace_back(Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
+    auto& bridgePillar2 = _meshes.emplace_back("bridgePillar2", Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
     bridgePillar2.Transform = glm::translate(bridgePillar2.Transform, glm::vec3(-1.f, -0.5f, 0.0f));
 
-    auto& bridgeTop = _meshes.emplace_back(Shapes::bridgeTopVertices, Shapes::bridgeTopElements);
+    auto& bridgeTop = _meshes.emplace_back("bridgeTop", Shapes::bridgeTopVertices, Shapes::bridgeTopElements);
     bridgeTop.Transform = glm::translate(bridgeTop.Transform, glm::vec3(0.0f, 0.90f, 0.0f));
     bridgeTop.Transform = glm::rotate(bridgeTop.Transform, glm::radians(90.f), glm::vec3(0, 1, 0));
 
-    auto& bridgeBody = _meshes.emplace_back(Shapes::bridgeBodyVertices, Shapes::cubeElements);
+    auto& bridgeBody = _meshes.emplace_back("bridgeBody", Shapes::bridgeBodyVertices, Shapes::cubeElements);
     bridgeBody.Transform = glm::translate(bridgeBody.Transform, glm::vec3(0.0f, 0.25f, 0.0f));
 
     // adding textures to vector
     auto texturePath = std::filesystem::current_path() / "assets" / "textures";
-    _textures.emplace_back(texturePath / "container.jpg");
-    _textures.emplace_back(texturePath / "moss.jpg");
+    _textures.emplace_back(texturePath / "container.jpg"); // 0
+    _textures.emplace_back(texturePath / "moss.jpg"); // 1
+    _textures.emplace_back(texturePath / "water.jpg"); // 2
+    _textures.emplace_back(texturePath / "stone.jpg"); // 3
 
     // declaring paths to shaderfiles
     Path shaderPath = std::filesystem::current_path() / "assets" / "shaders";
@@ -221,16 +223,57 @@ bool Application::draw() {
     _shader.SetInt("tex0", 0);
     _shader.SetInt("tex1", 1);
 
-    for (auto i = 0; i < _textures.size(); i++) {
-        glActiveTexture(GL_TEXTURE0 + i);
-        _textures[i].Bind();
-    }
+//    for (auto i = 0; i < _textures.size(); i++) {
+//        glActiveTexture(GL_TEXTURE0 + i);
+//        _textures[i].Bind();
+//    }
 
     // draw each mesh
     for (auto& mesh : _meshes) {
         // sending each individual mesh.Transform to the shader
         _shader.SetMat4("model", mesh.Transform);
-        mesh.Draw();
+        if (mesh.GetName() == "plane") {
+            glActiveTexture(GL_TEXTURE0);
+            _textures[2].Bind(); // water
+            glActiveTexture(GL_TEXTURE1);
+            _textures[2].Bind(); // water
+            mesh.Draw();
+            glDisable(GL_TEXTURE_2D);
+        }
+        if (mesh.GetName() == "bridgeTop") {
+            glActiveTexture(GL_TEXTURE0);
+            _textures[0].Bind(); // container
+            glActiveTexture(GL_TEXTURE1);
+            _textures[1].Bind(); // container
+            mesh.Draw();
+            glDisable(GL_TEXTURE_2D);
+
+        }
+        if (mesh.GetName() == "bridgePillar1") {
+            glActiveTexture(GL_TEXTURE0);
+            _textures[1].Bind(); // moss
+            glActiveTexture(GL_TEXTURE1);
+            _textures[3].Bind(); // stone
+            mesh.Draw();
+            glDisable(GL_TEXTURE_2D);
+        }
+        if (mesh.GetName() == "bridgePillar2") {
+            glActiveTexture(GL_TEXTURE0);
+            _textures[1].Bind(); // moss
+            glActiveTexture(GL_TEXTURE1);
+            _textures[3].Bind(); // moss
+            mesh.Draw();
+            glDisable(GL_TEXTURE_2D);
+        }
+
+        if (mesh.GetName() == "bridgeBody") {
+            glActiveTexture(GL_TEXTURE0);
+            _textures[0].Bind(); // stone
+            glActiveTexture(GL_TEXTURE1);
+            _textures[0].Bind(); // stone
+            mesh.Draw();
+            glDisable(GL_TEXTURE_2D);
+        }
     }
 
     glfwSwapBuffers(_window);

@@ -30,4 +30,6 @@ Texture::Texture(const std::filesystem::path &path) {
 
 void Texture::Bind() {
     glBindTexture(GL_TEXTURE_2D, _textureHandle);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }

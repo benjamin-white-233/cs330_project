@@ -1,7 +1,8 @@
 #include <mesh.h>
 #include <iostream>
 
-Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<uint32_t>& elements) {
+Mesh::Mesh(std::string name, std::vector<Vertex>& vertices, std::vector<uint32_t>& elements) {
+    _name = name;
     // create the triangle
     glGenVertexArrays(1, &_vertexArrayObject);
     glGenBuffers(1, &_vertexBufferObject);
@@ -38,4 +39,8 @@ void Mesh::Draw() {
 
     // gl draw calls
     glDrawElements(GL_TRIANGLES, _elementCount, GL_UNSIGNED_INT, nullptr);
+}
+
+std::string Mesh::GetName() {
+    return Mesh::_name;
 }
