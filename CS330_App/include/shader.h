@@ -16,7 +16,9 @@ public:
     void Bind();
 
     void SetMat4(const std::string& uniformName, const glm::mat4& mat4);
+    void SetVec3(const std::string& uniformName, const glm::vec3& vec3);
     void SetInt(const std::string& uniformName, int value);
+
 private:
     void load(const std::string& vertexSource, const std::string& fragmentSource);
     GLint getUniformLocation(const std::string& uniformName);

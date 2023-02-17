@@ -11,29 +11,44 @@ struct Vertex {
 
 
 struct Shapes {
+    static inline void UpdateNormals(Vertex& p1, Vertex& p2, Vertex& p3) {
+        glm::vec3 U = p2.Position - p1.Position;
+        glm::vec3 V = p3.Position - p1.Position;
+
+        auto normal = glm::cross(U, V);
+
+        p1.Normal = normal;
+        p2.Normal = normal;
+        p3.Normal = normal;
+    }
+
     static inline std::vector<Vertex> planeVertices {
             // 0
             {
                     .Position = {-2.5f, 0.f, 4.f},
                     .Color = {0.2f, 0.6f, 0.1f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 1
             {
                     .Position = {2.5f, 0.f, 4.f},
                     .Color = {0.2f, 0.6f, 0.1f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             // 2
             {
                     .Position = {2.5f, 0.f, -4.f},
                     .Color = {0.2f, 0.7f, 0.9f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 3
             {
                     .Position = {-2.5f, 0.f, -4.f},
                     .Color = {0.2f, 0.7f, 0.9f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
     };
@@ -44,53 +59,57 @@ struct Shapes {
             {
                     .Position = {-0.25f, 0.9f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 1
             {
                     .Position = {-0.25f, -0.5f, 0.5f},
                     .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 2
             {
                     .Position = {0.25f, -0.5f, 0.5f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
-
             },
             // 3
             {
                     .Position = {0.25f, 0.9f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f},
-
-
             },
             // right
             // 4
             {
                     .Position = {0.25f, 0.9f, 0.5f},
                     .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
-
             },
             // 5
             {
                     .Position = {0.25f, -0.5f, 0.5f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 6
             {
                     .Position = {0.25f, -0.5f, -0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 7
             {
                     .Position = {0.25f, 0.9f, -0.5f},
                     .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f},
             },
             // back
@@ -98,24 +117,28 @@ struct Shapes {
             {
                     .Position = {0.25f, 0.9f, -0.5f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 9
             {
                     .Position = {0.25f, -0.5f, -0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 10
             {
                     .Position = {-0.25f, -0.5f, -0.5f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 11
             {
                     .Position = {-0.25f, 0.9f, -0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             // left
@@ -123,68 +146,79 @@ struct Shapes {
             {
                     .Position = {-0.25f, 0.9f, -0.5f},
                     .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 13
             {
                     .Position = {-0.25f, -0.5f, -0.5f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 14
             {
                     .Position = {-0.25f, -0.5f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 15
             {
                     .Position = {-0.25f, 0.9f, 0.5f},
                     .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             // top
             // 16
             {
                     .Position = {-0.25f, 0.9f, -0.5f},
-                    .Color = {0.5f, 0.5f, 1.f}
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 17
             {
                     .Position = {-0.25f, 0.9f, 0.5f},
-                    .Color = {1.f, 0.5f, 0.5f}
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 18
             {
                     .Position = {0.25f, 0.9f, 0.5f},
-                    .Color = {0.5f, 1.f, 0.5f}
+                    .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 19
             {
                     .Position = {0.25f, 0.9f, -0.5f},
-                    .Color = {0.5f, 0.5f, 1.f}
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // bottom
             // 20
             {
                     .Position = {0.25f, -0.5f, 0.5f},
-                    .Color = {1.f, 0.5f, 0.5f}
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 21
             {
                     .Position = {0.25f, -0.5f, -0.5f},
-                    .Color = {0.5f, 1.f, 0.5f}
-
+                    .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 22
             {
                     .Position = {-0.25f, -0.5f, -0.5f},
-                    .Color = {0.5f, 0.5f, 1.f}
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 23
             {
                     .Position = {-0.25f, -0.5f, 0.5f},
-                    .Color = {1.f, 0.5f, 0.5f}
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
     };
 
@@ -194,24 +228,28 @@ struct Shapes {
             {
                     .Position = {-0.75f, 0.25f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 1
             {
                     .Position = {-0.75f, -0.5f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 2
             {
                     .Position = {0.75f, -0.5f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 3
             {
                     .Position = {0.75f, 0.25f, 0.5f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             // right
@@ -219,24 +257,28 @@ struct Shapes {
             {
                     .Position = {0.75f, 0.25f, 0.5f},
                     .Color = {0.5f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 5
             {
                     .Position = {0.75f, -0.5f, 0.5f},
                     .Color = {0.5f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 6
             {
                     .Position = {0.75f, -0.5f, -0.5f},
                     .Color = {0.5f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 7
             {
                     .Position = {0.75f, 0.25f, -0.5f},
                     .Color = {0.5f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             // back
@@ -244,24 +286,28 @@ struct Shapes {
             {
                     .Position = {0.75f, 0.25f, -0.5f},
                     .Color = {1.f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 9
             {
                     .Position = {0.75f, -0.5f, -0.5f},
                     .Color = {1.f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 10
             {
                     .Position = {-0.75f, -0.5f, -0.5f},
                     .Color = {1.f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 11
             {
                     .Position = {-0.75f, 0.25f, -0.5f},
                     .Color = {1.f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             // left
@@ -269,58 +315,68 @@ struct Shapes {
             {
                     .Position = {-0.75f, 0.25f, -0.5f},
                     .Color = {0.f, 0.5f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 13
             {
                     .Position = {-0.75f, -0.5f, -0.5f},
                     .Color = {0.f, 0.5f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 14
             {
                     .Position = {-0.75f, -0.5f, 0.5f},
                     .Color = {0.f, 0.5f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 15
             {
                     .Position = {-0.75f, 0.25f, 0.5f},
                     .Color = {0.f, 0.5f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             // top
             // 16
             {
                     .Position = {-0.75f, 0.25f, -0.5f},
-                    .Color = {0.f, 1.f, 0.f}
+                    .Color = {0.f, 1.f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 17
             {
                     .Position = {-0.75f, 0.25f, 0.5f},
-                    .Color = {0.f, 1.f, 0.f}
+                    .Color = {0.f, 1.f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 18
             {
                     .Position = {0.75f, 0.25f, 0.5f},
-                    .Color = {0.f, 1.f, 0.f}
+                    .Color = {0.f, 1.f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // 19
             {
                     .Position = {0.75f, 0.25f, -0.5f},
-                    .Color = {0.f, 1.f, 0.f}
+                    .Color = {0.f, 1.f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
             },
             // bottom
             // 20
             {
                     .Position = {0.75f, -0.5f, 0.5f},
                     .Color = {0.f, 0.5f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 21
             {
                     .Position = {0.75f, -0.5f, -0.5f},
                     .Color = {0.f, 0.5f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
 
             },
@@ -328,12 +384,14 @@ struct Shapes {
             {
                     .Position = {-0.75f, -0.5f, -0.5f},
                     .Color = {0.f, 0.5f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // 23
             {
                     .Position = {-0.75f, -0.5f, 0.5f},
                     .Color = {0.f, 0.5f, 0.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
     };
@@ -345,12 +403,14 @@ struct Shapes {
             {
                     .Position = {-1.f, -0.5f, 1.25f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 1
             {
                     .Position = {1.f, -0.5f, 1.25f},
                     .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // top point
@@ -358,6 +418,7 @@ struct Shapes {
             {
                     .Position = {0.0f, 0.1f, 1.25f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             //// second triangle
@@ -366,12 +427,14 @@ struct Shapes {
             {
                     .Position = {-1.f, -0.5f, -1.25f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 4
             {
                     .Position = {1.f, -0.5f, -1.25f},
                     .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // top point
@@ -379,6 +442,7 @@ struct Shapes {
             {
                     .Position = {0.0f, 0.1f, -1.25f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
             // triangle 1 texture
@@ -386,12 +450,14 @@ struct Shapes {
             {
                     .Position = {-1.f, -0.5f, -1.251f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 7
             {
                     .Position = {1.0f, -0.5f, -1.251f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // front
@@ -399,6 +465,7 @@ struct Shapes {
             {
                     .Position = {0.f, 0.1f, -1.25f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.5f, 1.f}
             },
             // triangle 2 texture
@@ -406,12 +473,14 @@ struct Shapes {
             {
                     .Position = {-1.f, -0.5f, 1.251f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 10
             {
                     .Position = {1.0f, -0.5f, 1.251f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // front
@@ -419,6 +488,7 @@ struct Shapes {
             {
                     .Position = {0.f, 0.1f, 1.25f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.5f, 1.f}
             },
             // base texture
@@ -426,27 +496,188 @@ struct Shapes {
             {
                     .Position = {-1.f, -0.51f, -1.251f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 0.f}
             },
             // 13
             {
                     .Position = {-1.f, -0.51f, 1.251f},
                     .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {0.f, 1.f}
             },
             // 14
             {
                     .Position = {1.0f, -0.51f, -1.251f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 0.f}
             },
             // 15
             {
                     .Position = {1.0f, -0.51f, 1.251f},
                     .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.f, 0.f, 0.f},
                     .Uv = {1.f, 1.f}
             },
 
+    };
+
+    static inline std::vector<Vertex> cubeVertices{
+            // front
+            // 0
+            {
+                    .Position = {-0.5f, 0.5f, 0.5f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 1
+            {
+                    .Position = {-0.5f, -0.5f, 0.5f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {1.f, 0.f}
+            },
+            // 2
+            {
+                    .Position = {0.5f, -0.5f, 0.5f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {1.f, 1.f}
+            },
+            // 3
+            {
+                    .Position = {0.5f, 0.5f, 0.5f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Uv = {0.f, 1.f}
+            },
+            // right
+            // 4
+            {
+                    .Position = {0.5f, 0.5f, 0.5f},
+                    .Color = {0.5f, 0.5f, 0.5f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 5
+            {
+                    .Position = {0.5f, -0.5f, 0.5f},
+                    .Color = {0.5f, 0.5f, 0.5f},
+                    .Uv = {1.f, 0.f}
+            },
+            // 6
+            {
+                    .Position = {0.5f, -0.5f, -0.5f},
+                    .Color = {0.5f, 0.5f, 0.5f},
+                    .Uv = {1.f, 1.f}
+            },
+            // 7
+            {
+                    .Position = {0.5f, 0.5f, -0.5f},
+                    .Color = {0.5f, 0.5f, 0.5f},
+                    .Uv = {0.f, 1.f}
+            },
+            // back
+            // 8
+            {
+                    .Position = {0.5f, 0.5f, -0.5f},
+                    .Color = {1.f, 1.f, 0.5f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 9
+            {
+                    .Position = {0.5f, -0.5f, -0.5f},
+                    .Color = {1.f, 1.f, 0.5f},
+                    .Uv = {1.f, 0.f}
+            },
+            // 10
+            {
+                    .Position = {-0.5f, -0.5f, -0.5f},
+                    .Color = {1.f, 1.f, 0.5f},
+                    .Uv = {1.f, 1.f}
+            },
+            // 11
+            {
+                    .Position = {-0.5f, 0.5f, -0.5f},
+                    .Color = {1.f, 1.f, 0.5f},
+                    .Uv = {0.f, 1.f}
+            },
+            // left
+            // 12
+            {
+                    .Position = {-0.5f, 0.5f, -0.5f},
+                    .Color = {0.f, 0.5f, 0.f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 13
+            {
+                    .Position = {-0.5f, -0.5f, -0.5f},
+                    .Color = {0.f, 0.5f, 0.f},
+                    .Uv = {1.f, 0.f}
+            },
+            // 14
+            {
+                    .Position = {-0.5f, -0.5f, 0.5f},
+                    .Color = {0.f, 0.5f, 0.f},
+                    .Uv = {1.f, 1.f}
+            },
+            // 15
+            {
+                    .Position = {-0.5f, 0.5f, 0.5f},
+                    .Color = {0.f, 0.5f, 0.f},
+                    .Uv = {0.f, 1.f}
+            },
+            // top
+            // 16
+            {
+                    .Position = {-0.5f, 0.5f, -0.5f},
+                    .Color = {0.f, 1.f, 0.f},
+                    .Uv = {0.f, 0.f}
+
+            },
+            // 17
+            {
+                    .Position = {-0.5f, 0.5f, 0.5f},
+                    .Color = {0.f, 1.f, 0.f},
+                    .Uv = {1.f, 0.f}
+
+            },
+            // 18
+            {
+                    .Position = {0.5f, 0.5f, 0.5f},
+                    .Color = {0.f, 1.f, 0.f},
+                    .Uv = {1.f, 1.f}
+
+            },
+            // 19
+            {
+                    .Position = {0.5f, 0.5f, -0.5f},
+                    .Color = {0.f, 1.f, 0.f},
+                    .Uv = {0.f, 1.f}
+            },
+            // bottom
+            // 20
+            {
+                    .Position = {0.5f, -0.5f, 0.5f},
+                    .Color = {0.f, 0.5f, 0.f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 21
+            {
+                    .Position = {0.5f, -0.5f, -0.5f},
+                    .Color = {0.f, 0.5f, 0.f},
+                    .Uv = {1.f, 0.f}
+
+            },
+            // 22
+            {
+                    .Position = {-0.5f, -0.5f, -0.5f},
+                    .Color = {0.f, 0.5f, 0.f},
+                    .Uv = {1.f, 1.f}
+            },
+            // 23
+            {
+                    .Position = {-0.5f, -0.5f, 0.5f},
+                    .Color = {0.f, 0.5f, 0.f},
+                    .Uv = {0.f, 1.f}
+            }
     };
 
     static inline std::vector<uint32_t> bridgeTopElements {

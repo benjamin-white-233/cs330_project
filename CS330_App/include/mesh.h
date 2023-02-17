@@ -14,6 +14,9 @@ public:
     glm::mat4 Transform {1.f};
 
 private:
+    void init(std::string name, std::vector<Vertex>& vertices, std::vector<uint32_t>& elements);
+
+private:
     std::string _name;
     uint32_t _elementCount {0};
     GLuint _vertexBufferObject {};

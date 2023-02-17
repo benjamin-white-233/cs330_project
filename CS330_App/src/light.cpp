@@ -1,23 +1,7 @@
-#include <mesh.h>
+#include <light.h>
 #include <iostream>
-#include <types.h>
 
-Mesh::Mesh(std::string name, std::vector<Vertex>& vertices, std::vector<uint32_t>& elements) {
-    init(name, vertices, elements);
-}
-
-void Mesh::init(std::string name, std::vector<Vertex>& vertices, std::vector<uint32_t>& elements) {
-    _name = name;
-
-    for (auto i = 0; i < elements.size(); i += 3) {
-        // calculate normals
-        auto p1Index = elements[i];
-        auto p2Index = elements[i + 1];
-        auto p3Index = elements[i + 2];
-
-        Shapes::UpdateNormals(vertices[p1Index], vertices[p2Index], vertices[p3Index]);
-    }
-
+Light::Light(std::vector<Vertex>& vertices, std::vector<uint32_t>& elements) {
     // create the triangle
     glGenVertexArrays(1, &_vertexArrayObject);
     glGenBuffers(1, &_vertexBufferObject);
@@ -47,11 +31,7 @@ void Mesh::init(std::string name, std::vector<Vertex>& vertices, std::vector<uin
     _elementCount = elements.size();
 }
 
-std::string Mesh::GetName() {
-    return Mesh::_name;
-}
-
-void Mesh::Draw() {
+void Light::Draw() {
 
     // Bind vertex array
     glBindVertexArray(_vertexArrayObject);

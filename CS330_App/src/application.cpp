@@ -161,41 +161,50 @@ void Application::setupInputs() {
             }
             default:
                 std::cout << "Unhangled mouse button event" << std::endl;
-
         }
     });
 }
 
 void Application::setupScene() {
+    //// shapes
     // creating different meshes for each shape and manipulating the position
-    auto& plane = _meshes.emplace_back("plane", Shapes::planeVertices, Shapes::planeElements);
+    auto &plane = _meshes.emplace_back("plane", Shapes::planeVertices, Shapes::planeElements);
     plane.Transform = glm::translate(plane.Transform, glm::vec3(0.f, -1.f, 0.f));
 
-    auto& bridgePillar1 = _meshes.emplace_back("bridgePillar1", Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
+    auto &bridgePillar1 = _meshes.emplace_back("bridgePillar1", Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
     bridgePillar1.Transform = glm::translate(bridgePillar1.Transform, glm::vec3(1.f, -0.5f, 0.0f));
 
-    auto& bridgePillar2 = _meshes.emplace_back("bridgePillar2", Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
+    auto &bridgePillar2 = _meshes.emplace_back("bridgePillar2", Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
     bridgePillar2.Transform = glm::translate(bridgePillar2.Transform, glm::vec3(-1.f, -0.5f, 0.0f));
 
-    auto& bridgeTop = _meshes.emplace_back("bridgeTop", Shapes::bridgeTopVertices, Shapes::bridgeTopElements);
+    auto &bridgeTop = _meshes.emplace_back("bridgeTop", Shapes::bridgeTopVertices, Shapes::bridgeTopElements);
     bridgeTop.Transform = glm::translate(bridgeTop.Transform, glm::vec3(0.0f, 0.90f, 0.0f));
     bridgeTop.Transform = glm::rotate(bridgeTop.Transform, glm::radians(90.f), glm::vec3(0, 1, 0));
 
-    auto& bridgeBody = _meshes.emplace_back("bridgeBody", Shapes::bridgeBodyVertices, Shapes::cubeElements);
+    auto &bridgeBody = _meshes.emplace_back("bridgeBody", Shapes::bridgeBodyVertices, Shapes::cubeElements);
     bridgeBody.Transform = glm::translate(bridgeBody.Transform, glm::vec3(0.0f, 0.25f, 0.0f));
 
-    // adding textures to vector
+    //// textures
     auto texturePath = std::filesystem::current_path() / "assets" / "textures";
     _textures.emplace_back(texturePath / "container.jpg"); // 0
     _textures.emplace_back(texturePath / "moss.jpg"); // 1
     _textures.emplace_back(texturePath / "water.jpg"); // 2
     _textures.emplace_back(texturePath / "stone.jpg"); // 3
 
+    //// lights
+    auto &cube = _lights.emplace_back(Shapes::cubeVertices, Shapes::cubeElements);
+    cube.Transform = glm::translate(cube.Transform, glm::vec3(-5.f, 0.f, -5.f));
+    cube.Transform = glm::scale(cube.Transform, glm::vec3(0.2f));
+
+//    auto &cube2 = _lights.emplace_back(Shapes::cubeVertices, Shapes::cubeElements);
+//    cube2.Transform = glm::translate(cube2.Transform, glm::vec3(0.f, 5.f, 0.f));
+//    cube2.Transform = glm::scale(cube2.Transform, glm::vec3(0.2f));
+
     // declaring paths to shaderfiles
     Path shaderPath = std::filesystem::current_path() / "assets" / "shaders";
-    _shader = Shader( shaderPath / "basic_shader.vert" , shaderPath / "basic_shader.frag");
+    _lighting_shader = Shader(shaderPath / "basic_lighting.vert", shaderPath / "basic_lighting.frag");
+    _light_cube_shader = Shader(shaderPath / "light_cube.vert", shaderPath / "light_cube.frag");
 }
-
 
 bool Application::update(float deltaTime) {
     glfwPollEvents();
@@ -215,13 +224,28 @@ bool Application::draw() {
     glm::mat4 view = _camera.GetViewMatrix();
     glm::mat4 projection = _camera.GetProjectionMatrix();
 
-    // set matrices in the shader
-    _shader.Bind();
-    _shader.SetMat4("projection", projection);
-    _shader.SetMat4("view", view);
+    for (auto &light : _lights) {
+        // set matrices in the shader
+        _light_cube_shader.Bind();
+        _light_cube_shader.SetMat4("projection", projection);
+        _light_cube_shader.SetMat4("view", view);
+        _light_cube_shader.SetMat4("model", light.Transform);
 
-    _shader.SetInt("tex0", 0);
-    _shader.SetInt("tex1", 1);
+        _light_cube_shader.SetVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+        _light_cube_shader.SetVec3("lightPos", glm::vec3(light.Transform[3]));
+        _light_cube_shader.SetVec3("viewPos", _camera.position);
+
+        light.Draw();
+    }
+
+    // set matrices in the shader
+    _lighting_shader.Bind();
+    _lighting_shader.SetMat4("projection", projection);
+    _lighting_shader.SetMat4("view", view);
+
+
+    _lighting_shader.SetInt("tex0", 0);
+    _lighting_shader.SetInt("tex1", 1);
 
 //    for (auto i = 0; i < _textures.size(); i++) {
 //        glActiveTexture(GL_TEXTURE0 + i);
@@ -231,7 +255,7 @@ bool Application::draw() {
     // draw each mesh
     for (auto& mesh : _meshes) {
         // sending each individual mesh.Transform to the shader
-        _shader.SetMat4("model", mesh.Transform);
+        _lighting_shader.SetMat4("model", mesh.Transform);
         if (mesh.GetName() == "plane") {
             glActiveTexture(GL_TEXTURE0);
             _textures[2].Bind(); // water

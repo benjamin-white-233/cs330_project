@@ -22,6 +22,8 @@ public:
     glm::mat4 GetViewMatrix();
     glm::mat4 GetProjectionMatrix();
 
+    glm::vec3 position {};
+
     bool IsPerspective () const { return _isPerspective; }
     void SetIsPerspective(bool isPerspective) { _isPerspective = isPerspective; }
     void SetSize(int width, int height) {
@@ -38,7 +40,6 @@ private:
 private:
     bool _isPerspective { true };
 
-    glm::vec3 _position {};
     glm::vec3 _lookDirection {};
     glm::vec3 _upDirection { 0.f, 1.f, 0.f };
     glm::vec3 _rightDirection {};

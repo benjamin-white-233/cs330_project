@@ -6,7 +6,7 @@
 #include <shader.h>
 #include <camera.h>
 #include <texture.h>
-
+#include <light.h>
 #include <mesh.h>
 
 class Application {
@@ -35,9 +35,14 @@ private:
 
     float _moveSpeed { 5.f };
     Camera _camera;
+
     std::vector<Mesh> _meshes;
+    std::vector<Light> _lights;
     std::vector<Texture> _textures;
-    Shader _shader;
+
+    Shader _lighting_shader;
+    Shader _light_cube_shader;
+
     bool _running { false };
 
     bool _firstMouse { false };
