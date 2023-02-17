@@ -89,6 +89,11 @@ bool Application::openWindow() {
 
     glEnable(GL_DEPTH_TEST);
 
+    // cull back faces to ensure correct vertices ordering
+//    glFrontFace(GL_CCW);
+//    glCullFace(GL_BACK);
+//    glEnable(GL_CULL_FACE);
+
     // otherwise, return true
     return true;
 }
@@ -186,15 +191,16 @@ void Application::setupScene() {
 
     //// textures
     auto texturePath = std::filesystem::current_path() / "assets" / "textures";
-    _textures.emplace_back(texturePath / "container.jpg"); // 0
+    _textures.emplace_back(texturePath / "wood.jpeg"); // 0
     _textures.emplace_back(texturePath / "moss.jpg"); // 1
-    _textures.emplace_back(texturePath / "water.jpg"); // 2
+    _textures.emplace_back(texturePath / "water4.png"); // 2
     _textures.emplace_back(texturePath / "stone.jpg"); // 3
+    _textures.emplace_back(texturePath / "steel.jpg"); // 4
 
     //// lights
     auto &cube = _lights.emplace_back(Shapes::cubeVertices, Shapes::cubeElements);
-    cube.Transform = glm::translate(cube.Transform, glm::vec3(-5.f, 0.f, -5.f));
-    cube.Transform = glm::scale(cube.Transform, glm::vec3(0.2f));
+    cube.Transform = glm::translate(cube.Transform, glm::vec3(1.f, 0.f, -5.f));
+    cube.Transform = glm::scale(cube.Transform, glm::vec3(0.f));
 
 //    auto &cube2 = _lights.emplace_back(Shapes::cubeVertices, Shapes::cubeElements);
 //    cube2.Transform = glm::translate(cube2.Transform, glm::vec3(0.f, 5.f, 0.f));
@@ -224,7 +230,7 @@ bool Application::draw() {
     glm::mat4 view = _camera.GetViewMatrix();
     glm::mat4 projection = _camera.GetProjectionMatrix();
 
-    for (auto &light : _lights) {
+    for (auto &light: _lights) {
         // set matrices in the shader
         _light_cube_shader.Bind();
         _light_cube_shader.SetMat4("projection", projection);
@@ -238,24 +244,28 @@ bool Application::draw() {
         light.Draw();
     }
 
-    // set matrices in the shader
-    _lighting_shader.Bind();
-    _lighting_shader.SetMat4("projection", projection);
-    _lighting_shader.SetMat4("view", view);
-
-
     _lighting_shader.SetInt("tex0", 0);
     _lighting_shader.SetInt("tex1", 1);
 
-//    for (auto i = 0; i < _textures.size(); i++) {
-//        glActiveTexture(GL_TEXTURE0 + i);
-//        _textures[i].Bind();
-//    }
-
+    int counter = 0;
     // draw each mesh
-    for (auto& mesh : _meshes) {
+    for (auto &mesh: _meshes) {
+        // set matrices in the shader
+        _lighting_shader.Bind();
+        // light color
+        _lighting_shader.SetVec3("lightColor", glm::vec3(0.7f, 0.2f, 0.5f));
+        // position of light source to object shader
+        _lighting_shader.SetVec3("lightPos", glm::vec3(_lights[counter].Transform[3]));
+        _lighting_shader.SetVec3("viewPos", _camera.position);
+        _lighting_shader.SetMat4("projection", projection);
+        _lighting_shader.SetMat4("view", view);
         // sending each individual mesh.Transform to the shader
         _lighting_shader.SetMat4("model", mesh.Transform);
+
+        if (counter < _lights.size()) {
+            counter += 1;
+        }
+
         if (mesh.GetName() == "plane") {
             glActiveTexture(GL_TEXTURE0);
             _textures[2].Bind(); // water
@@ -266,26 +276,25 @@ bool Application::draw() {
         }
         if (mesh.GetName() == "bridgeTop") {
             glActiveTexture(GL_TEXTURE0);
-            _textures[0].Bind(); // container
+            _textures[4].Bind(); // steel
             glActiveTexture(GL_TEXTURE1);
-            _textures[1].Bind(); // container
+            _textures[4].Bind(); // steel
             mesh.Draw();
             glDisable(GL_TEXTURE_2D);
-
         }
         if (mesh.GetName() == "bridgePillar1") {
             glActiveTexture(GL_TEXTURE0);
-            _textures[1].Bind(); // moss
+            _textures[3].Bind(); // moss
             glActiveTexture(GL_TEXTURE1);
-            _textures[3].Bind(); // stone
+            _textures[1].Bind(); // stone
             mesh.Draw();
             glDisable(GL_TEXTURE_2D);
         }
         if (mesh.GetName() == "bridgePillar2") {
             glActiveTexture(GL_TEXTURE0);
-            _textures[1].Bind(); // moss
-            glActiveTexture(GL_TEXTURE1);
             _textures[3].Bind(); // moss
+            glActiveTexture(GL_TEXTURE1);
+            _textures[1].Bind(); // moss
             mesh.Draw();
             glDisable(GL_TEXTURE_2D);
         }
@@ -303,6 +312,7 @@ bool Application::draw() {
     glfwSwapBuffers(_window);
     return false;
 }
+
 
 // assigning keys to a movement direction
 void Application::handleInput(float deltaTime) {
