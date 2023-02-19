@@ -173,14 +173,19 @@ void Application::setupInputs() {
 void Application::setupScene() {
     //// shapes
     // creating different meshes for each shape and manipulating the position
-    auto &plane = _meshes.emplace_back("plane", Shapes::planeVertices, Shapes::planeElements);
-    plane.Transform = glm::translate(plane.Transform, glm::vec3(0.f, -1.f, 0.f));
+    auto &river = _meshes.emplace_back("river", Shapes::riverVertices, Shapes::planeElements);
+    river.Transform = glm::translate(river.Transform, glm::vec3(0.f, -1.f, 0.f));
 
-//    auto &plane2 = _meshes.emplace_back("plane", Shapes::planeVertices, Shapes::planeElements);
+    auto &grass = _meshes.emplace_back("grass", Shapes::planeVertices, Shapes::planeElements);
+    grass.Transform = glm::translate(grass.Transform, glm::vec3(0.f, -1.1f, 0.f));
+    grass.Transform = glm::scale(grass.Transform, glm::vec3(2.f));
+
+
+//    auto &plane2 = _meshes.emplace_back("river", Shapes::planeVertices, Shapes::planeElements);
 //    plane2.Transform = glm::translate(plane2.Transform, glm::vec3(0.f, -1.f, -8.f));
 //    plane2.Transform = glm::rotate(plane2.Transform, glm::radians(180.f), glm::vec3(1, 0, 0));
 //
-//    auto &plane3 = _meshes.emplace_back("plane", Shapes::planeVertices, Shapes::planeElements);
+//    auto &plane3 = _meshes.emplace_back("river", Shapes::planeVertices, Shapes::planeElements);
 //    plane3.Transform = glm::translate(plane3.Transform, glm::vec3(0.f, -1.f, 8.f));
 //    plane3.Transform = glm::rotate(plane3.Transform, glm::radians(180.f), glm::vec3(1, 0, 0));
 //
@@ -190,7 +195,7 @@ void Application::setupScene() {
 
 
     auto &bridgePillar1 = _meshes.emplace_back("bridgePillar1", Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
-    bridgePillar1.Transform = glm::translate(bridgePillar1.Transform, glm::vec3(1.f, -0.5f, 0.0f));
+    bridgePillar1.Transform = glm::translate(bridgePillar1.Transform, glm::vec3(1.5f, -0.5f, 0.0f));
 
     auto &bridgePillar2 = _meshes.emplace_back("bridgePillar2", Shapes::bridgePillarVertices, Shapes::bridgePillarElements);
     bridgePillar2.Transform = glm::translate(bridgePillar2.Transform, glm::vec3(-1.f, -0.5f, 0.0f));
@@ -203,29 +208,20 @@ void Application::setupScene() {
     bridgeBody.Transform = glm::translate(bridgeBody.Transform, glm::vec3(0.0f, 0.25f, 0.0f));
 
     // generate rocks
-    std::vector<Vertex> rockVertices = Shapes::sphereVertices(20, 20, 0.5f, 0.5f, 0.5f);
-    std::vector<uint32_t> rockElements = Shapes::sphereElements(20, 20);
-
-    auto &rock = _meshes.emplace_back("rock", rockVertices, rockElements);
-    rock.Transform = glm::translate(rock.Transform, glm::vec3(2.f, -1.15f, 3.0f));
-    rock.Transform = glm::scale(rock.Transform, glm::vec3(0.25f));
+//    std::vector<Vertex> rockVertices = Shapes::sphereVertices(20, 20, 1.f, 1.f, 1.f);
+//    std::vector<uint32_t> rockElements = Shapes::sphereElements(20, 20);
+//
+//    auto &rock = _meshes.emplace_back("rock", rockVertices, rockElements);
+//    rock.Transform = glm::translate(rock.Transform, glm::vec3(2.f, -1.15f, 3.0f));
+//    rock.Transform = glm::scale(rock.Transform, glm::vec3(0.25f));
 
     //// lights
-//    auto &cube = _lights.emplace_back(Shapes::cubeVertices, Shapes::cubeElements);
-//    cube.Transform = glm::translate(cube.Transform, glm::vec3(1.f, 0.f, -10.f));
-//    cube.Transform = glm::scale(cube.Transform, glm::vec3(0.f));
-
-    std::vector<Vertex> sunVertices = Shapes::sphereVertices(100, 100, 1.f, 1.f, 0.f);
+    std::vector<Vertex> sunVertices = Shapes::sphereVertices(100, 100, 1.f, 1.f, 0.8f);
     std::vector<uint32_t> sunElements = Shapes::sphereElements(100, 100);
 
     auto &sun = _lights.emplace_back(sunVertices, sunElements);
     sun.Transform = glm::translate(sun.Transform, glm::vec3(4.f, 3.f, -10.f));
     sun.Transform = glm::scale(sun.Transform, glm::vec3(2.f));
-
-
-//    auto &cube2 = _lights.emplace_back(Shapes::cubeVertices, Shapes::cubeElements);
-//    cube2.Transform = glm::translate(cube2.Transform, glm::vec3(0.f, 5.f, 0.f));
-//    cube2.Transform = glm::scale(cube2.Transform, glm::vec3(0.2f));
 
     // declaring paths to shaderfiles
     Path shaderPath = std::filesystem::current_path() / "assets" / "shaders";
@@ -240,7 +236,7 @@ void Application::setupScene() {
     _textures.emplace_back(texturePath / "stone.jpg"); // 3
     _textures.emplace_back(texturePath / "steel.jpg"); // 4
     _textures.emplace_back(texturePath / "sun.jpg"); // 5
-
+    _textures.emplace_back(texturePath / "grass.jpg"); // 6
 }
 
 bool Application::update(float deltaTime) {
@@ -300,7 +296,7 @@ bool Application::draw() {
             counter += 1;
         }
 
-        if (mesh.GetName() == "plane") {
+        if (mesh.GetName() == "river") {
             glActiveTexture(GL_TEXTURE0);
             _textures[2].Bind(); // water
             glActiveTexture(GL_TEXTURE1);
@@ -308,6 +304,16 @@ bool Application::draw() {
             mesh.Draw();
             glDisable(GL_TEXTURE_2D);
         }
+
+        if (mesh.GetName() == "grass") {
+            glActiveTexture(GL_TEXTURE0);
+            _textures[6].Bind(); // grass
+            glActiveTexture(GL_TEXTURE1);
+            _textures[6].Bind(); // grass
+            mesh.Draw();
+            glDisable(GL_TEXTURE_2D);
+        }
+
         if (mesh.GetName() == "bridgeTop") {
             glActiveTexture(GL_TEXTURE0);
             _textures[4].Bind(); // steel
@@ -342,11 +348,11 @@ bool Application::draw() {
             glDisable(GL_TEXTURE_2D);
         }
 
-        else {
+        if (mesh.GetName() == "rock") {
             glActiveTexture(GL_TEXTURE0);
-//            _textures[3].Bind(); // stone
+            _textures[3].Bind(); // stone
             glActiveTexture(GL_TEXTURE1);
-//            _textures[3].Bind(); // stone
+            _textures[3].Bind(); // stone
             mesh.Draw();
             glDisable(GL_TEXTURE_2D);
         }
