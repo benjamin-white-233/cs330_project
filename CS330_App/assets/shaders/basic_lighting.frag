@@ -8,8 +8,6 @@ in vec3 fragPos;
 
 uniform sampler2D tex0; // GL_TEXTURE0
 uniform sampler2D tex1; // GL_TEXTURE1
-uniform sampler2D tex2; // GL_TEXTURE2
-uniform sampler2D tex3; // GL_TEXTURE3
 
 uniform sampler2D tex;
 
@@ -22,8 +20,7 @@ uniform vec3 objectColor;
 void main() {
     vec3 objectColor = vertexColor.xyz;
 
-    vec3 lightColor = vec3(1.f, 1.f, 1.f);
-//    vec3 objectColor = vec3(1.f, 0.2f, 0.2f);
+    vec3 lightColor = vec3(1.f, 1.f, 0.95f);
     // ambient
     float ambientStrength = 3.f;
     vec3 ambient = ambientStrength * lightColor;
