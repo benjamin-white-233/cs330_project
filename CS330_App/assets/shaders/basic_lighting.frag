@@ -22,7 +22,7 @@ uniform vec3 objectColor;
 void main() {
     vec3 objectColor = vertexColor.xyz;
 
-    vec3 lightColor = vec3(1.f, 1.f, 0.95f);
+    vec3 lightColor = vec3(1.f, 1.f, 1.f);
 //    vec3 objectColor = vec3(1.f, 0.2f, 0.2f);
     // ambient
     float ambientStrength = 3.f;

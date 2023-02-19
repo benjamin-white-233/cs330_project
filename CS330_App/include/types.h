@@ -1,7 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
 
-
 struct Vertex {
     glm::vec3 Position {0.f, 0.f, 0.f};
     glm::vec3 Color {1.f, 1.f, 1.f};
@@ -20,6 +19,59 @@ struct Shapes {
         p1.Normal = normal;
         p2.Normal = normal;
         p3.Normal = normal;
+    };
+
+    static inline std::vector<Vertex> sphereVertices(int stacks, int slices, float color_x, float color_y, float color_z) {
+        const float PI = 3.14159265359f;
+
+        std::vector<Vertex> vertices;
+        std::vector<uint32_t> elements;
+
+        // loop through stacks.
+        for (int i = 0; i <= stacks; ++i){
+
+            Vertex vertex;
+            float V = (float) i / (float) stacks;
+            float phi = V * PI;
+
+            // loop through the slices.
+            for (int j = 0; j <= slices; ++j) {
+
+                float U = (float) j / (float) slices;
+                float theta = U * (PI * 2);
+
+                // use spherical coordinates to calculate the positions.
+                float x = cos(theta) * sin(phi);
+                float y = cos(phi);
+                float z = sin(theta) * sin(phi);
+
+                vertex.Position.x = x;
+                vertex.Position.y = y;
+                vertex.Position.z = z;
+
+                vertex.Color.x = color_x;
+                vertex.Color.y = color_y;
+                vertex.Color.z = color_z;
+
+                vertices.push_back(vertex);
+            }
+        }
+        return vertices;
+    };
+
+    static inline std::vector<uint32_t> sphereElements(int stacks, int slices) {
+        std::vector<uint32_t> elements;
+
+        for (int i = 0; i < slices * stacks + slices; ++i){
+            elements.push_back((i));
+            elements.push_back((i + slices + 1));
+            elements.push_back((i + slices));
+
+            elements.push_back((i + slices + 1));
+            elements.push_back((i));
+            elements.push_back((i + 1));
+        }
+        return elements;
     }
 
     static inline std::vector<Vertex> planeVertices {
@@ -685,7 +737,89 @@ struct Shapes {
                     .Position = {-0.5f, -0.5f, 0.5f},
                     .Color = {0.f, 0.5f, 0.f},
                     .Uv = {0.f, 1.f}
-            }
+            },
+    };
+
+    static inline std::vector<Vertex> pyramidVertices{
+            // front
+            // 0
+            {
+                    .Position = {-0.5f, -0.5f, 0.5f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 1
+            {
+                    .Position = {0.5f, -0.5f, 0.5f},
+                    .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {1.f, 0.f}
+            },
+            // top point
+            // 2
+            {
+                    .Position = {0.0f, 0.5f, 0.0f},
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {0.5f, 1.f}
+            },
+            // right
+            // 3
+            {
+                    .Position = {0.5f, -0.5f, -0.5f},
+                    .Color = {0.5f, 0.5f, 0.5f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 4
+            {
+                    .Position = {-0.5f, -0.5f, -0.5f},
+                    .Color = {0.5f, 0.5f, 0.5f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {1.f, 0.f}
+            },
+
+            // base
+            // 5 = 0
+            {
+                    .Position = {-0.5f, -0.5f, 0.5f},
+                    .Color = {1.f, 0.5f, 0.5f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {0.f, 0.f}
+            },
+            // 6 = 1
+            {
+                    .Position = {0.5f, -0.5f, 0.5f},
+                    .Color = {0.5f, 1.f, 0.5f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {1.f, 0.f}
+            },
+            // 7 = 2
+            {
+                    .Position = {0.5f, -0.5f, -0.5f},
+                    .Color = {0.5f, 0.5f, 1.f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {1.f, 1.f}
+            },
+            // 8 = 3
+            {
+                    .Position = {-0.5f, -0.5f, -0.5f},
+                    .Color = {0.5f, 0.5f, 0.5f},
+                    .Normal = {0.0f, 0.0f, 0.0f},
+                    .Uv = {0.f, 1.f}
+            },
+    };
+
+    static inline std::vector<uint32_t> pyramidElements{
+            // sides
+            0, 1, 2,
+            1, 3, 2,
+            3, 4, 2,
+            4, 0, 2,
+            // base
+            5, 6, 7,
+            7, 8, 5
     };
 
     static inline std::vector<uint32_t> bridgeTopElements {
